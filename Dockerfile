@@ -15,4 +15,14 @@ ARG DEPENDENCY=/workspace/app/target/dependency
 COPY --from=build ${DEPENDENCY}/BOOT-INF/lib /app/lib
 COPY --from=build ${DEPENDENCY}/META-INF /app/META-INF
 COPY --from=build ${DEPENDENCY}/BOOT-INF/classes /app
-ENTRYPOINT ["java","-cp","app:app/lib/*","com.jsonplaceholder.JsonplaceholderCloneApplication"] 
+
+# Add healthcheck
+HEALTHCHECK --interval=30s --timeout=3s \
+  CMD wget --no-verbose --tries=1 --spider http://localhost:8080/actuator/health || exit 1
+
+# Set proper entrypoint with JVM options
+ENTRYPOINT ["java", \
+    "-cp", "app:app/lib/*", \
+    "-Djava.security.egd=file:/dev/./urandom", \
+    "-Dspring.profiles.active=prod", \
+    "com.jsonplaceholder.JsonplaceholderCloneApplication"] 

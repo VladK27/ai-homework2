@@ -2,9 +2,9 @@ spring:
   application:
     name: jsonplaceholder-clone
   datasource:
-    url: jdbc:postgresql://localhost:5432/jsonplaceholder
-    username: postgres
-    password: postgres
+    url: jdbc:postgresql://${DB_HOST:localhost}:${DB_PORT:5432}/${DB_NAME:jsonplaceholder}
+    username: ${DB_USERNAME:postgres}
+    password: ${DB_PASSWORD:postgres}
     driver-class-name: org.postgresql.Driver
   jpa:
     hibernate:
@@ -21,7 +21,7 @@ spring:
     schemas: public
 
 server:
-  port: 8081
+  port: ${SERVER_PORT:8080}
 
 jwt:
   secret: ${JWT_SECRET:5367566B59703373367639792F423F4528482B4D6251655468576D5A71347437}
